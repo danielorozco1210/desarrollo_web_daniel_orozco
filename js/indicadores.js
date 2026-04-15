@@ -5,33 +5,33 @@
 
 /* Datos de ejemplo para indicadores */
 var datosMiembros = {
-  pregrado: 45,
-  postgrado: 18,
-  funcionario: 12,
-  academico: 25
+  pregrado: 4,
+  postgrado: 1,
+  funcionario: 1,
+  academico: 1
 };
 
 var datosActividades = {
-  artistica: 22,
-  deportiva: 35,
-  tecnologica: 28,
+  artistica: 15,
+  deportiva: 15,
+  tecnologica: 15,
   social: 15,
-  recreativa: 20
+  recreativa: 18
 };
 
 var actividadesPorMes = [
-  { mes: "Ene", cantidad: 8 },
-  { mes: "Feb", cantidad: 5 },
-  { mes: "Mar", cantidad: 15 },
-  { mes: "Abr", cantidad: 22 },
-  { mes: "May", cantidad: 18 },
-  { mes: "Jun", cantidad: 25 },
-  { mes: "Jul", cantidad: 12 },
-  { mes: "Ago", cantidad: 20 },
-  { mes: "Sep", cantidad: 30 },
-  { mes: "Oct", cantidad: 28 },
-  { mes: "Nov", cantidad: 24 },
-  { mes: "Dic", cantidad: 10 }
+  { mes: "Ene", cantidad: 1 },
+  { mes: "Feb", cantidad: 2 },
+  { mes: "Mar", cantidad: 3 },
+  { mes: "Abr", cantidad: 4 },
+  { mes: "May", cantidad: 5 },
+  { mes: "Jun", cantidad: 6 },
+  { mes: "Jul", cantidad: 7 },
+  { mes: "Ago", cantidad: 8 },
+  { mes: "Sep", cantidad: 9 },
+  { mes: "Oct", cantidad: 10 },
+  { mes: "Nov", cantidad: 11 },
+  { mes: "Dic", cantidad: 12 }
 ];
 
 /**
