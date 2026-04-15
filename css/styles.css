@@ -432,9 +432,8 @@ tbody tr:hover {
   display: flex;
   align-items: flex-end;
   gap: 1.5rem;
-  height: 200px;
+  height: 80px;
   padding: 0 1rem;
-  border-bottom: 2px solid var(--color-borde);
 }
 
 .barra-item {
