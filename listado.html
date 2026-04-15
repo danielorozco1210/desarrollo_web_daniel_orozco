@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Listado de Miembros — Sistema DCC</title>
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+
+  <header class="encabezado-sitio">
+    <h1>Sistema de Gestión de Actividades</h1>
+    <span class="subtitulo">Departamento de Ciencias de la Computación — Universidad de Chile</span>
+  </header>
+
+  <nav class="nav-principal" aria-label="Navegación principal">
+    <ul>
+      <li><a href="index.html">Inicio</a></li>
+      <li><a href="registro.html">Registro de Miembros</a></li>
+      <li><a href="actividades.html">Informar Actividad</a></li>
+      <li><a href="listado.html" class="activo">Listado de Miembros</a></li>
+      <li><a href="indicadores.html">Indicadores</a></li>
+    </ul>
+  </nav>
+
+  <main class="contenido-principal">
+
+    <h2>Listado de Miembros Registrados</h2>
+
+    <!-- Filtros -->
+    <section class="tarjeta">
+      <h3>Filtros de Búsqueda</h3>
+      <fieldset class="barra-filtros" style="border: none; padding: 0;">
+        <legend style="display: none;">Filtros</legend>
+
+        <article class="grupo-campo">
+          <label for="filtro-tipo">Tipo de Miembro</label>
+          <select id="filtro-tipo">
+            <option value="">Todos</option>
+            <option value="pregrado">Estudiante Pregrado</option>
+            <option value="postgrado">Estudiante Postgrado</option>
+            <option value="funcionario">Funcionario/a</option>
+            <option value="academico">Académico/a</option>
+          </select>
+        </article>
+
+        <article class="grupo-campo">
+          <label for="filtro-busqueda">Buscar</label>
+          <input type="text" id="filtro-busqueda"
+                 placeholder="Nombre, apellido, email o RUT...">
+        </article>
+      </fieldset>
+    </section>
+
+    <!-- Tabla de resultados -->
+    <section class="tarjeta">
+      <p id="info-resultados" style="font-size: 0.85rem; color: #7f8c8d; margin-bottom: 0.75rem;"></p>
+
+      <table>
+        <caption style="display: none;">Listado de miembros registrados</caption>
+        <thead>
+          <tr>
+            <th data-columna="rut">RUT</th>
+            <th data-columna="apellidos">Nombre Completo ▲</th>
+            <th data-columna="email">Correo</th>
+            <th data-columna="telefono">Teléfono</th>
+            <th data-columna="tipo">Tipo</th>
+            <th>Carrera / Cargo</th>
+          </tr>
+        </thead>
+        <tbody id="cuerpo-tabla">
+          <!-- Se llena dinámicamente con JavaScript -->
+        </tbody>
+      </table>
+
+      <nav class="paginacion" id="paginacion" aria-label="Paginación de resultados">
+        <!-- Se llena dinámicamente con JavaScript -->
+      </nav>
+    </section>
+
+    <aside class="alerta alerta-info">
+      <strong>Nota:</strong> Haga clic en los encabezados de columna para ordenar la tabla.
+      Use los filtros para refinar los resultados.
+    </aside>
+
+  </main>
+
+  <footer class="pie-pagina">
+    <p>CC5002 — Desarrollo de Aplicaciones Web &bull; DCC, Universidad de Chile &bull; 2025</p>
+  </footer>
+
+  <script src="js/listado.js"></script>
+</body>
+</html>

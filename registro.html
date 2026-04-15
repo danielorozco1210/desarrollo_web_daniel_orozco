@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Registro de Miembros — Sistema DCC</title>
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+
+  <header class="encabezado-sitio">
+    <h1>Sistema de Gestión de Actividades</h1>
+    <span class="subtitulo">Departamento de Ciencias de la Computación — Universidad de Chile</span>
+  </header>
+
+  <nav class="nav-principal" aria-label="Navegación principal">
+    <ul>
+      <li><a href="index.html">Inicio</a></li>
+      <li><a href="registro.html" class="activo">Registro de Miembros</a></li>
+      <li><a href="actividades.html">Informar Actividad</a></li>
+      <li><a href="listado.html">Listado de Miembros</a></li>
+      <li><a href="indicadores.html">Indicadores</a></li>
+    </ul>
+  </nav>
+
+  <main class="contenido-principal">
+
+    <h2>Registro de Miembros de la Comunidad</h2>
+    <p>Complete el formulario para registrar un nuevo miembro. Los campos marcados con
+      <strong class="obligatorio">asterisco</strong> son obligatorios.</p>
+
+    <section class="tarjeta">
+      <form id="form-registro" onsubmit="return validarRegistro()" novalidate>
+
+        <!-- Datos de identificación -->
+        <fieldset>
+          <legend>Datos de Identificación</legend>
+
+          <article class="grupo-campo">
+            <label for="rut" class="obligatorio">RUT</label>
+            <span class="nota-campo">Formato: 12.345.678-5 o 12345678-5</span>
+            <input type="text" id="rut" name="rut" placeholder="Ej: 12.345.678-5"
+                   maxlength="12" autocomplete="off">
+            <span class="mensaje-error" aria-live="polite"></span>
+          </article>
+
+          <article class="grupo-campo">
+            <label for="nombres" class="obligatorio">Nombres</label>
+            <input type="text" id="nombres" name="nombres" placeholder="Ej: Juan Pablo"
+                   maxlength="80">
+            <span class="mensaje-error" aria-live="polite"></span>
+          </article>
+
+          <article class="grupo-campo">
+            <label for="apellidos" class="obligatorio">Apellidos</label>
+            <input type="text" id="apellidos" name="apellidos" placeholder="Ej: Pérez González"
+                   maxlength="80">
+            <span class="mensaje-error" aria-live="polite"></span>
+          </article>
+        </fieldset>
+
+        <!-- Datos de contacto -->
+        <fieldset>
+          <legend>Datos de Contacto</legend>
+
+          <article class="grupo-campo">
+            <label for="email" class="obligatorio">Correo Electrónico</label>
+            <input type="email" id="email" name="email"
+                   placeholder="Ej: usuario@uchile.cl" maxlength="120">
+            <span class="mensaje-error" aria-live="polite"></span>
+          </article>
+
+          <article class="grupo-campo">
+            <label for="telefono">Teléfono Celular</label>
+            <span class="nota-campo">Opcional. Formato: +569XXXXXXXX o 9XXXXXXXX</span>
+            <input type="tel" id="telefono" name="telefono"
+                   placeholder="Ej: +56912345678" maxlength="15">
+            <span class="mensaje-error" aria-live="polite"></span>
+          </article>
+        </fieldset>
+
+        <!-- Tipo de miembro -->
+        <fieldset>
+          <legend>Tipo de Miembro</legend>
+
+          <article class="grupo-campo">
+            <label for="tipo-miembro" class="obligatorio">Seleccione el tipo de miembro</label>
+            <select id="tipo-miembro" name="tipo-miembro" onchange="actualizarCamposCondicionales()">
+              <option value="">— Seleccione —</option>
+              <option value="pregrado">Estudiante de Pregrado</option>
+              <option value="postgrado">Estudiante de Postgrado</option>
+              <option value="funcionario">Funcionario/a</option>
+              <option value="academico">Académico/a</option>
+            </select>
+            <span class="mensaje-error" aria-live="polite"></span>
+          </article>
+
+          <!-- Campos condicionales: Estudiantes -->
+          <section id="campos-estudiante" style="display: none;">
+            <article class="grupo-campo">
+              <label for="carrera" class="obligatorio">Carrera / Programa</label>
+              <input type="text" id="carrera" name="carrera"
+                     placeholder="Ej: Ingeniería Civil en Computación" maxlength="120">
+              <span class="mensaje-error" aria-live="polite"></span>
+            </article>
+
+            <article class="grupo-campo">
+              <label for="anio-ingreso">Año de Ingreso</label>
+              <span class="nota-campo">Opcional.</span>
+              <input type="number" id="anio-ingreso" name="anio-ingreso"
+                     placeholder="Ej: 2022" min="1990" max="2025">
+              <span class="mensaje-error" aria-live="polite"></span>
+            </article>
+          </section>
+
+          <!-- Campos condicionales: Funcionarios y Académicos -->
+          <section id="campos-funcionario" style="display: none;">
+            <article class="grupo-campo">
+              <label for="cargo" class="obligatorio">Cargo</label>
+              <input type="text" id="cargo" name="cargo"
+                     placeholder="Ej: Profesor Asociado" maxlength="120">
+              <span class="mensaje-error" aria-live="polite"></span>
+            </article>
+
+            <article class="grupo-campo">
+              <label for="departamento">Unidad / Departamento</label>
+              <span class="nota-campo">Opcional.</span>
+              <input type="text" id="departamento" name="departamento"
+                     placeholder="Ej: Área de Infraestructura" maxlength="120">
+              <span class="mensaje-error" aria-live="polite"></span>
+            </article>
+          </section>
+        </fieldset>
+
+        <section class="grupo-botones">
+          <button type="submit" class="boton boton-primario">Registrar Miembro</button>
+          <button type="reset" class="boton boton-secundario"
+                  onclick="limpiarTodosLosErrores('form-registro'); ocultarCamposCondicionales();">
+            Limpiar Formulario
+          </button>
+        </section>
+
+      </form>
+    </section>
+
+  </main>
+
+  <footer class="pie-pagina">
+    <p>CC5002 — Desarrollo de Aplicaciones Web &bull; DCC, Universidad de Chile &bull; 2025</p>
+  </footer>
+
+  <script src="js/validaciones.js"></script>
+</body>
+</html>

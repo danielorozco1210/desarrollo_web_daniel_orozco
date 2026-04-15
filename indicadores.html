@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Indicadores y Métricas — Sistema DCC</title>
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+
+  <header class="encabezado-sitio">
+    <h1>Sistema de Gestión de Actividades</h1>
+    <span class="subtitulo">Departamento de Ciencias de la Computación — Universidad de Chile</span>
+  </header>
+
+  <nav class="nav-principal" aria-label="Navegación principal">
+    <ul>
+      <li><a href="index.html">Inicio</a></li>
+      <li><a href="registro.html">Registro de Miembros</a></li>
+      <li><a href="actividades.html">Informar Actividad</a></li>
+      <li><a href="listado.html">Listado de Miembros</a></li>
+      <li><a href="indicadores.html" class="activo">Indicadores</a></li>
+    </ul>
+  </nav>
+
+  <main class="contenido-principal">
+
+    <h2>Indicadores y Métricas</h2>
+    <p>Panel de estadísticas sobre los miembros registrados y las actividades que realizan.</p>
+
+    <!-- Tarjetas de indicadores numéricos -->
+    <section class="cuadricula-indicadores" aria-label="Resumen numérico">
+
+      <article class="indicador">
+        <span class="valor" id="total-miembros">0</span>
+        <span class="etiqueta">Miembros Registrados</span>
+      </article>
+
+      <article class="indicador">
+        <span class="valor" id="total-actividades">0</span>
+        <span class="etiqueta">Actividades Reportadas</span>
+      </article>
+
+      <article class="indicador">
+        <span class="valor" id="total-estudiantes">0</span>
+        <span class="etiqueta">Estudiantes (Pre + Post)</span>
+      </article>
+
+      <article class="indicador">
+        <span class="valor" id="promedio-actividades">0</span>
+        <span class="etiqueta">Promedio Activ. / Miembro</span>
+      </article>
+
+    </section>
+
+    <!-- Gráfico de torta: Distribución por tipo de miembro -->
+    <section class="contenedor-grafico">
+      <h3>Distribución por Tipo de Miembro</h3>
+      <article class="grafico-torta-contenedor">
+        <span class="grafico-torta" id="grafico-torta-miembros" role="img"
+              aria-label="Gráfico de torta con la distribución de miembros por tipo"></span>
+        <ul class="leyenda-torta" id="leyenda-torta-miembros">
+          <!-- Se llena con JavaScript -->
+        </ul>
+      </article>
+    </section>
+
+    <!-- Gráfico de barras: Actividades por mes -->
+    <section class="contenedor-grafico">
+      <h3>Actividades Reportadas por Mes</h3>
+      <article class="grafico-barras" id="grafico-barras-mensual"
+               role="img" aria-label="Gráfico de barras con actividades reportadas por mes">
+        <!-- Se llena con JavaScript -->
+      </article>
+    </section>
+
+    <!-- Gráfico de barras horizontales: Tipos de actividad -->
+    <section class="contenedor-grafico">
+      <h3>Actividades por Tipo</h3>
+      <article id="grafico-tipos-actividad"
+               role="img" aria-label="Gráfico de barras horizontales con actividades por tipo">
+        <!-- Se llena con JavaScript -->
+      </article>
+    </section>
+
+  </main>
+
+  <footer class="pie-pagina">
+    <p>CC5002 — Desarrollo de Aplicaciones Web &bull; DCC, Universidad de Chile &bull; 2025</p>
+  </footer>
+
+  <script src="js/indicadores.js"></script>
+</body>
+</html>
