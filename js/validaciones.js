@@ -259,12 +259,12 @@ function validarRegistro() {
       mostrarError("carrera", "La carrera o programa es obligatorio para estudiantes.");
       esValido = false;
     }
-    var anioIngreso = document.getElementById("anio-ingreso");
-    if (anioIngreso && esTextoValido(anioIngreso.value)) {
-      var anio = parseInt(anioIngreso.value);
-      var anioActual = new Date().getFullYear();
-      if (isNaN(anio) || anio < 1990 || anio > anioActual) {
-        mostrarError("anio-ingreso", "Ingrese un año válido entre 1990 y " + anioActual + ".");
+    var añoIngreso = document.getElementById("año-ingreso");
+    if (añoIngreso && esTextoValido(añoIngreso.value)) {
+      var año = parseInt(añoIngreso.value);
+      var añoActual = new Date().getFullYear();
+      if (isNaN(año) || año < 1990 || año > añoActual) {
+        mostrarError("año-ingreso", "Ingrese un año válido entre 1990 y " + añoActual + ".");
         esValido = false;
       }
     }

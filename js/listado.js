@@ -5,21 +5,13 @@
 
 /* Datos de ejemplo para simular el listado */
 var miembrosEjemplo = [
-  { rut: "12.345.678-5", nombres: "Ana", apellidos: "García López", email: "ana.garcia@uchile.cl", telefono: "+56912345678", tipo: "pregrado", carrera: "Ingeniería Civil en Computación", anioIngreso: 2021 },
-  { rut: "11.222.333-4", nombres: "Carlos", apellidos: "Muñoz Soto", email: "carlos.munoz@uchile.cl", telefono: "+56922334455", tipo: "postgrado", carrera: "Magíster en Ciencias de la Computación", anioIngreso: 2023 },
-  { rut: "9.876.543-2", nombres: "Beatriz", apellidos: "Álvarez Riquelme", email: "beatriz.alvarez@uchile.cl", telefono: "+56933445566", tipo: "funcionario", cargo: "Secretaria Académica" },
-  { rut: "15.678.901-K", nombres: "Diego", apellidos: "Fernández Pizarro", email: "diego.fernandez@uchile.cl", telefono: "+56944556677", tipo: "academico", cargo: "Profesor Asociado" },
-  { rut: "14.333.222-1", nombres: "Elena", apellidos: "Bravo Contreras", email: "elena.bravo@uchile.cl", telefono: "+56955667788", tipo: "pregrado", carrera: "Ingeniería Civil en Computación", anioIngreso: 2022 },
-  { rut: "16.444.555-6", nombres: "Felipe", apellidos: "Rojas Tapia", email: "felipe.rojas@uchile.cl", telefono: "+56966778899", tipo: "pregrado", carrera: "Ingeniería Civil en Computación", anioIngreso: 2020 },
-  { rut: "10.111.999-8", nombres: "Gabriela", apellidos: "Morales Vera", email: "gabriela.morales@uchile.cl", telefono: "+56977889900", tipo: "academico", cargo: "Profesora Titular" },
-  { rut: "13.555.666-7", nombres: "Hugo", apellidos: "Castro Díaz", email: "hugo.castro@uchile.cl", telefono: "+56988990011", tipo: "funcionario", cargo: "Administrador de Sistemas" },
-  { rut: "17.888.777-3", nombres: "Isabel", apellidos: "López Fuentes", email: "isabel.lopez@uchile.cl", telefono: "+56911223344", tipo: "postgrado", carrera: "Doctorado en Computación", anioIngreso: 2022 },
-  { rut: "18.999.000-9", nombres: "Javier", apellidos: "Araya Molina", email: "javier.araya@uchile.cl", telefono: "+56900112233", tipo: "pregrado", carrera: "Ingeniería Civil en Computación", anioIngreso: 2023 },
-  { rut: "8.765.432-1", nombres: "Karla", apellidos: "Sandoval Pérez", email: "karla.sandoval@uchile.cl", telefono: "+56911001122", tipo: "funcionario", cargo: "Encargada de Bienestar" },
-  { rut: "19.123.456-0", nombres: "Luis", apellidos: "Vega Ramírez", email: "luis.vega@uchile.cl", telefono: "+56922113344", tipo: "pregrado", carrera: "Ingeniería Civil en Computación", anioIngreso: 2024 },
-  { rut: "20.234.567-1", nombres: "María", apellidos: "Espinoza Torres", email: "maria.espinoza@uchile.cl", telefono: "+56933224455", tipo: "postgrado", carrera: "Magíster en Ciencias de la Computación", anioIngreso: 2024 },
-  { rut: "7.654.321-K", nombres: "Nicolás", apellidos: "Herrera Guzmán", email: "nicolas.herrera@uchile.cl", telefono: "+56944335566", tipo: "academico", cargo: "Profesor Asistente" },
-  { rut: "21.345.678-2", nombres: "Olivia", apellidos: "Paredes Silva", email: "olivia.paredes@uchile.cl", telefono: "+56955446677", tipo: "pregrado", carrera: "Ingeniería Civil en Computación", anioIngreso: 2021 }
+  { rut: "11.222.333-4", nombres: "Carlos", apellidos: "Muñoz Soto", email: "carlos.munoz@ug.uchile.cl", telefono: "+56922334455", tipo: "postgrado", carrera: "Magíster en Ciencias de la Computación", añoIngreso: 2023 },
+  { rut: "20.326.386-6", nombres: "Daniel", apellidos: "Orozco Saavedra", email: "daniel.orozco@ug.uchile.cl", telefono: "+56975827647", tipo: "pregrado", carrera: "Ingeniería Civil Industrial", añoIngreso: 2018 },
+  { rut: "16.444.555-6", nombres: "Felipe", apellidos: "Rojas Tapia", email: "felipe.rojas@ug.uchile.cl", telefono: "+56966778899", tipo: "pregrado", carrera: "Ingeniería Civil en Computación", añoIngreso: 2020 },
+  { rut: "13.555.666-7", nombres: "Hugo", apellidos: "Castro Díaz", email: "hugo.castro@ug.uchile.cl", telefono: "+56988990011", tipo: "funcionario", cargo: "Administrador de Sistemas" },
+  { rut: "18.999.000-9", nombres: "Javier", apellidos: "Araya Molina", email: "javier.araya@ug.uchile.cl", telefono: "+56900112233", tipo: "pregrado", carrera: "Ingeniería Civil en Computación", añoIngreso: 2023 },
+  { rut: "19.123.456-0", nombres: "Luis", apellidos: "Vega Ramírez", email: "luis.vega@ug.uchile.cl", telefono: "+56922113344", tipo: "pregrado", carrera: "Ingeniería Civil en Computación", añoIngreso: 2024 },
+  { rut: "7.654.321-K", nombres: "Nicolás", apellidos: "Herrera Guzmán", email: "nicolas.herrera@ug.uchile.cl", telefono: "+56944335566", tipo: "academico", cargo: "Profesor Asistente" }
 ];
 
 var ITEMS_POR_PAGINA = 5;
