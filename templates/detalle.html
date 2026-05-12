@@ -1,0 +1,92 @@
+{% extends "base.html" %}
+{% block titulo %}Detalle de {{ miembro.nombre }} — Sistema DCC{% endblock %}
+
+{% block contenido %}
+
+  <p>
+    <a href="{{ url_for('listado') }}">« Volver al listado</a>
+  </p>
+
+  <h2>{{ miembro.nombre }}</h2>
+
+  <section class="tarjeta">
+    <h3>Datos del Miembro</h3>
+    <dl class="lista-datos">
+      <dt>Correo electrónico</dt>
+      <dd>{{ miembro.email }}</dd>
+
+      <dt>Teléfono</dt>
+      <dd>{{ miembro.telefono }}</dd>
+
+      <dt>Comuna</dt>
+      <dd>{{ miembro.comuna.nombre if miembro.comuna else '—' }}</dd>
+
+      <dt>Región</dt>
+      <dd>{{ miembro.comuna.region.nombre if miembro.comuna and miembro.comuna.region else '—' }}</dd>
+
+      <dt>Fecha de Registro</dt>
+      <dd>{{ miembro.fecha_registro.strftime('%d-%m-%Y %H:%M:%S') }}</dd>
+    </dl>
+  </section>
+
+  <section>
+    <h3>Actividades ({{ miembro.actividades|length }})</h3>
+
+    {% if miembro.actividades|length == 0 %}
+      <p class="alerta alerta-info">Este miembro no tiene actividades registradas.</p>
+    {% else %}
+      {% for act in miembro.actividades %}
+        <article class="tarjeta tarjeta-detalle-actividad">
+          <header style="display:flex; justify-content:space-between; flex-wrap:wrap; gap:0.5rem;">
+            <h4>{{ act.nombre }}</h4>
+            <span class="etiqueta-tipo etiqueta-tipo-{{ act.tipo|replace('í','i')|replace('ó','o')|replace('é','e') }}">{{ act.tipo|capitalize }}</span>
+          </header>
+
+          <dl class="lista-datos">
+            <dt>Día</dt>
+            <dd>{{ act.dia|capitalize }}</dd>
+
+            <dt>Hora de inicio</dt>
+            <dd>{{ act.hora_inicio }}</dd>
+
+            <dt>Duración</dt>
+            <dd>{{ act.duracion }}</dd>
+
+            {% if act.descripcion %}
+              <dt>Descripción</dt>
+              <dd>{{ act.descripcion }}</dd>
+            {% endif %}
+          </dl>
+
+          {% if act.fotos and act.fotos|length > 0 %}
+            <h5>Fotos y Videos ({{ act.fotos|length }})</h5>
+            <section class="galeria-fotos">
+              {% for foto in act.fotos %}
+                {% set ext = foto.nombre_archivo.rsplit('.', 1)[-1]|lower %}
+                <article class="item-foto">
+                  {% if ext in ['jpg','jpeg','png','gif','bmp','webp'] %}
+                    <a href="{{ url_for('serve_upload', nombre=foto.ruta_archivo) }}" target="_blank">
+                      <img src="{{ url_for('serve_upload', nombre=foto.ruta_archivo) }}"
+                           alt="{{ foto.nombre_archivo }}" loading="lazy">
+                    </a>
+                  {% elif ext in ['mp4','avi','mov','mkv','webm'] %}
+                    <video controls preload="metadata">
+                      <source src="{{ url_for('serve_upload', nombre=foto.ruta_archivo) }}">
+                      Su navegador no soporta video HTML5.
+                    </video>
+                  {% else %}
+                    <a href="{{ url_for('serve_upload', nombre=foto.ruta_archivo) }}">
+                      📎 {{ foto.nombre_archivo }}
+                    </a>
+                  {% endif %}
+                  <span class="nombre-foto">{{ foto.nombre_archivo }}</span>
+                </article>
+              {% endfor %}
+            </section>
+          {% endif %}
+        </article>
+      {% endfor %}
+    {% endif %}
+  </section>
+
+{% endblock %}
