@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 """
 CC5002 - Desarrollo de Aplicaciones Web
 Tarea 2: Sistema de Gestión de Actividades DCC
