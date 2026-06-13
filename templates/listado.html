@@ -1,0 +1,99 @@
+{% extends "base.html" %}
+{% block titulo %}Listado de Miembros — Sistema DCC{% endblock %}
+
+{% block contenido %}
+
+  <h2>Listado de Miembros Registrados</h2>
+
+  <section class="tarjeta">
+    <form method="GET" action="{{ url_for('listado') }}"
+          style="display:flex; gap:0.75rem; align-items:flex-end; flex-wrap:wrap;">
+      <article class="grupo-campo" style="flex:1; min-width: 220px; margin-bottom:0;">
+        <label for="q">Buscar por nombre o correo</label>
+        <input type="text" id="q" name="q" value="{{ busqueda }}"
+               placeholder="Escriba un nombre o correo...">
+      </article>
+      <button type="submit" class="boton boton-primario">Buscar</button>
+      {% if busqueda %}
+        <a href="{{ url_for('listado') }}" class="boton boton-secundario">Limpiar</a>
+      {% endif %}
+    </form>
+  </section>
+
+  <section class="tarjeta">
+    <p id="info-resultados" style="font-size:0.85rem; color:#7f8c8d; margin-bottom:0.75rem;">
+      {% if paginacion.total == 0 %}
+        Sin resultados.
+      {% else %}
+        Mostrando
+        {{ (paginacion.page - 1) * paginacion.per_page + 1 }}–{{ (paginacion.page - 1) * paginacion.per_page + paginacion.items|length }}
+        de {{ paginacion.total }} miembros
+        (página {{ paginacion.page }} de {{ paginacion.pages }}).
+      {% endif %}
+    </p>
+
+    <table>
+      <caption style="display:none;">Listado de miembros registrados</caption>
+      <thead>
+        <tr>
+          <th>Nombre</th>
+          <th>Correo</th>
+          <th>Teléfono</th>
+          <th>Comuna</th>
+          <th>Región</th>
+          <th>Fecha Registro</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% if paginacion.items|length == 0 %}
+          <tr>
+            <td colspan="6" style="text-align:center; padding:2rem; color:#7f8c8d;">
+              No se encontraron miembros{% if busqueda %} para la búsqueda "{{ busqueda }}"{% endif %}.
+            </td>
+          </tr>
+        {% else %}
+          {% for m in paginacion.items %}
+            <tr class="fila-clickable"
+                onclick="window.location='{{ url_for('miembro_detalle', miembro_id=m.id) }}'"
+                tabindex="0"
+                onkeydown="if(event.key==='Enter')window.location='{{ url_for('miembro_detalle', miembro_id=m.id) }}'">
+              <td>{{ m.nombre }}</td>
+              <td>{{ m.email }}</td>
+              <td>{{ m.telefono }}</td>
+              <td>{{ m.comuna.nombre if m.comuna else '—' }}</td>
+              <td>{{ m.comuna.region.nombre if m.comuna and m.comuna.region else '—' }}</td>
+              <td>{{ m.fecha_registro.strftime('%d-%m-%Y %H:%M') }}</td>
+            </tr>
+          {% endfor %}
+        {% endif %}
+      </tbody>
+    </table>
+
+    {% if paginacion.pages > 1 %}
+      <nav class="paginacion" aria-label="Paginación de resultados">
+        <a href="{{ url_for('listado', pagina=paginacion.prev_num, q=busqueda) if paginacion.has_prev else '#' }}"
+           class="boton-paginacion {% if not paginacion.has_prev %}deshabilitado{% endif %}"
+           {% if not paginacion.has_prev %}aria-disabled="true"{% endif %}>« Anterior</a>
+
+        {% for p in paginacion.iter_pages(left_edge=1, right_edge=1, left_current=2, right_current=2) %}
+          {% if p %}
+            <a href="{{ url_for('listado', pagina=p, q=busqueda) }}"
+               class="boton-paginacion {% if p == paginacion.page %}activo{% endif %}">{{ p }}</a>
+          {% else %}
+            <span class="boton-paginacion deshabilitado">…</span>
+          {% endif %}
+        {% endfor %}
+
+        <a href="{{ url_for('listado', pagina=paginacion.next_num, q=busqueda) if paginacion.has_next else '#' }}"
+           class="boton-paginacion {% if not paginacion.has_next %}deshabilitado{% endif %}"
+           {% if not paginacion.has_next %}aria-disabled="true"{% endif %}>Siguiente »</a>
+      </nav>
+    {% endif %}
+  </section>
+
+  <aside class="alerta alerta-info">
+    <strong>Nota:</strong> Haga clic sobre cualquier fila para ver el detalle del miembro
+    y sus actividades.
+  </aside>
+
+{% endblock %}

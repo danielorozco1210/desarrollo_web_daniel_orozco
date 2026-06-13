@@ -1,0 +1,285 @@
+{% extends "base.html" %}
+{% block titulo %}Registrar Miembro y Actividades — Sistema DCC{% endblock %}
+
+{% block contenido %}
+
+  <h2>Registrar Miembro y Actividades</h2>
+  <p>Complete los datos del miembro y registre al menos una actividad. Los campos
+    marcados con <strong class="obligatorio">asterisco</strong> son obligatorios.</p>
+
+  {% if errores.general %}
+    <p class="alerta alerta-error" role="alert">{{ errores.general }}</p>
+  {% endif %}
+
+  {% if errores.actividades %}
+    <p class="alerta alerta-error" role="alert">{{ errores.actividades }}</p>
+  {% endif %}
+
+  <section class="tarjeta">
+    <form id="form-registro" method="POST" enctype="multipart/form-data"
+          action="{{ url_for('registro') }}"
+          onsubmit="return validarFormularioRegistro()" novalidate>
+
+      <!-- =========== DATOS DEL MIEMBRO =========== -->
+      <fieldset>
+        <legend>Datos del Miembro</legend>
+
+        <article class="grupo-campo">
+          <label for="nombre" class="obligatorio">Nombre Completo</label>
+          <span class="nota-campo">Sólo letras y espacios. Largo entre 3 y 255 caracteres.</span>
+          <input type="text" id="nombre" name="nombre" maxlength="255"
+                 placeholder="Ej: Juan Pablo Pérez González"
+                 value="{{ datos.nombre or '' }}" autocomplete="off">
+          <span class="mensaje-error {% if errores.nombre %}visible{% endif %}"
+                aria-live="polite">{{ errores.nombre or '' }}</span>
+        </article>
+
+        <article class="grupo-campo">
+          <label for="email" class="obligatorio">Correo Electrónico</label>
+          <input type="email" id="email" name="email" maxlength="80"
+                 placeholder="Ej: usuario@ug.uchile.cl"
+                 value="{{ datos.email or '' }}">
+          <span class="mensaje-error {% if errores.email %}visible{% endif %}"
+                aria-live="polite">{{ errores.email or '' }}</span>
+        </article>
+
+        <article class="grupo-campo">
+          <label for="telefono" class="obligatorio">Teléfono Celular</label>
+          <span class="nota-campo">Formato: +569XXXXXXXX o 9XXXXXXXX</span>
+          <input type="tel" id="telefono" name="telefono" maxlength="15"
+                 placeholder="Ej: +56912345678"
+                 value="{{ datos.telefono or '' }}">
+          <span class="mensaje-error {% if errores.telefono %}visible{% endif %}"
+                aria-live="polite">{{ errores.telefono or '' }}</span>
+        </article>
+
+        <article class="grupo-campo">
+          <label for="region_id" class="obligatorio">Región</label>
+          <select id="region_id" name="region_id">
+            <option value="">— Seleccione —</option>
+            {% for r in regiones %}
+              <option value="{{ r.id }}"
+                {% if region_id_sel and r.id == region_id_sel %}selected{% endif %}>
+                {{ r.nombre }}
+              </option>
+            {% endfor %}
+          </select>
+          <span class="mensaje-error" aria-live="polite"></span>
+        </article>
+
+        <article class="grupo-campo">
+          <label for="comuna_id" class="obligatorio">Comuna</label>
+          <select id="comuna_id" name="comuna_id"
+                  data-comuna-seleccionada="{{ datos.comuna_id or '' }}">
+            <option value="">— Primero seleccione una región —</option>
+          </select>
+          <span class="mensaje-error {% if errores.comuna_id %}visible{% endif %}"
+                aria-live="polite">{{ errores.comuna_id or '' }}</span>
+        </article>
+      </fieldset>
+
+      <!-- =========== ACTIVIDADES =========== -->
+      <fieldset>
+        <legend>Actividades del Miembro</legend>
+        <p class="nota-campo">Registre una o más actividades. Cada una requiere al menos una foto o video.</p>
+
+        <section id="contenedor-actividades">
+          {# Si veníamos de un error, re-renderizamos las actividades enviadas #}
+          {% if actividades_previas and actividades_previas|length > 0 %}
+            {% for act in actividades_previas %}
+              {% set i = loop.index0 %}
+              {% set err_act = (errores_actividades[i] if errores_actividades and errores_actividades|length > i else {}) %}
+              <article class="tarjeta-actividad" data-indice="{{ i }}">
+                <h3>Actividad <span class="numero-actividad">{{ i + 1 }}</span></h3>
+                <button type="button" class="boton-eliminar-actividad"
+                        onclick="eliminarActividad(this)">Eliminar actividad</button>
+
+                <article class="grupo-campo">
+                  <label class="obligatorio">Nombre de la Actividad</label>
+                  <input type="text" name="act_nombre[]" maxlength="45"
+                         value="{{ act.nombre or '' }}"
+                         placeholder="Ej: Taller de pintura al óleo">
+                  <span class="mensaje-error {% if err_act.nombre %}visible{% endif %}"
+                        aria-live="polite">{{ err_act.nombre or '' }}</span>
+                </article>
+
+                <article class="grupo-campo">
+                  <label class="obligatorio">Tipo de Actividad</label>
+                  <select name="act_tipo[]">
+                    <option value="">— Seleccione —</option>
+                    {% for t in ['arte','deporte','tecnología','social','recreación','otra'] %}
+                      <option value="{{ t }}" {% if act.tipo == t %}selected{% endif %}>
+                        {{ t|capitalize }}</option>
+                    {% endfor %}
+                  </select>
+                  <span class="mensaje-error {% if err_act.tipo %}visible{% endif %}"
+                        aria-live="polite">{{ err_act.tipo or '' }}</span>
+                </article>
+
+                <article class="grupo-campo grupo-horario">
+                  <article>
+                    <label class="obligatorio">Día</label>
+                    <select name="act_dia[]">
+                      <option value="">— Día —</option>
+                      {% for d in ['lunes','martes','miércoles','jueves','viernes','sábado','domingo'] %}
+                        <option value="{{ d }}" {% if act.dia == d %}selected{% endif %}>
+                          {{ d|capitalize }}</option>
+                      {% endfor %}
+                    </select>
+                    <span class="mensaje-error {% if err_act.dia %}visible{% endif %}"
+                          aria-live="polite">{{ err_act.dia or '' }}</span>
+                  </article>
+
+                  <article>
+                    <label class="obligatorio">Hora inicio</label>
+                    <input type="time" name="act_hora_inicio[]"
+                           value="{{ act.hora_inicio or '' }}">
+                    <span class="mensaje-error {% if err_act.hora_inicio %}visible{% endif %}"
+                          aria-live="polite">{{ err_act.hora_inicio or '' }}</span>
+                  </article>
+
+                  <article>
+                    <label class="obligatorio">Duración (HH:MM)</label>
+                    <input type="text" name="act_duracion[]" maxlength="5"
+                           pattern="[0-2][0-9]:[0-5][0-9]"
+                           placeholder="01:30"
+                           value="{{ act.duracion or '' }}">
+                    <span class="mensaje-error {% if err_act.duracion %}visible{% endif %}"
+                          aria-live="polite">{{ err_act.duracion or '' }}</span>
+                  </article>
+                </article>
+
+                <article class="grupo-campo">
+                  <label>Descripción</label>
+                  <span class="nota-campo">Opcional. Máximo 500 caracteres.</span>
+                  <textarea name="act_descripcion[]" rows="3" maxlength="500"
+                            placeholder="Describa brevemente la actividad...">{{ act.descripcion or '' }}</textarea>
+                  <span class="mensaje-error {% if err_act.descripcion %}visible{% endif %}"
+                        aria-live="polite">{{ err_act.descripcion or '' }}</span>
+                </article>
+
+                <article class="grupo-campo">
+                  <label class="obligatorio">Fotos o Videos</label>
+                  <span class="nota-campo">Al menos un archivo. Formatos: jpg, png, gif, bmp, webp, mp4, avi, mov, mkv, webm.</span>
+                  <input type="file" name="act_fotos_{{ i }}" multiple
+                         accept="image/*,video/*"
+                         class="input-fotos">
+                  {% if act.fotos_nombres and act.fotos_nombres|length > 0 %}
+                    <span class="nota-campo" style="color:#c0392b;">
+                      ⚠ Por seguridad, los archivos no pueden conservarse entre envíos.
+                      Vuelva a seleccionarlos: {{ act.fotos_nombres|join(', ') }}
+                    </span>
+                  {% endif %}
+                  <span class="mensaje-error {% if err_act.fotos %}visible{% endif %}"
+                        aria-live="polite">{{ err_act.fotos or '' }}</span>
+                </article>
+              </article>
+            {% endfor %}
+          {% endif %}
+        </section>
+
+        <button type="button" class="boton boton-acento" onclick="agregarActividad()">
+          + Agregar otra actividad
+        </button>
+      </fieldset>
+
+      <!-- =========== Template oculto para nuevas actividades (lo clona JS) =========== -->
+      <template id="plantilla-actividad">
+        <article class="tarjeta-actividad" data-indice="">
+          <h3>Actividad <span class="numero-actividad"></span></h3>
+          <button type="button" class="boton-eliminar-actividad"
+                  onclick="eliminarActividad(this)">Eliminar actividad</button>
+
+          <article class="grupo-campo">
+            <label class="obligatorio">Nombre de la Actividad</label>
+            <input type="text" name="act_nombre[]" maxlength="45"
+                   placeholder="Ej: Taller de pintura al óleo">
+            <span class="mensaje-error" aria-live="polite"></span>
+          </article>
+
+          <article class="grupo-campo">
+            <label class="obligatorio">Tipo de Actividad</label>
+            <select name="act_tipo[]">
+              <option value="">— Seleccione —</option>
+              <option value="arte">Arte</option>
+              <option value="deporte">Deporte</option>
+              <option value="tecnología">Tecnología</option>
+              <option value="social">Social</option>
+              <option value="recreación">Recreación</option>
+              <option value="otra">Otra</option>
+            </select>
+            <span class="mensaje-error" aria-live="polite"></span>
+          </article>
+
+          <article class="grupo-campo grupo-horario">
+            <article>
+              <label class="obligatorio">Día</label>
+              <select name="act_dia[]">
+                <option value="">— Día —</option>
+                <option value="lunes">Lunes</option>
+                <option value="martes">Martes</option>
+                <option value="miércoles">Miércoles</option>
+                <option value="jueves">Jueves</option>
+                <option value="viernes">Viernes</option>
+                <option value="sábado">Sábado</option>
+                <option value="domingo">Domingo</option>
+              </select>
+              <span class="mensaje-error" aria-live="polite"></span>
+            </article>
+
+            <article>
+              <label class="obligatorio">Hora inicio</label>
+              <input type="time" name="act_hora_inicio[]">
+              <span class="mensaje-error" aria-live="polite"></span>
+            </article>
+
+            <article>
+              <label class="obligatorio">Duración (HH:MM)</label>
+              <input type="text" name="act_duracion[]" maxlength="5"
+                     pattern="[0-2][0-9]:[0-5][0-9]"
+                     placeholder="01:30">
+              <span class="mensaje-error" aria-live="polite"></span>
+            </article>
+          </article>
+
+          <article class="grupo-campo">
+            <label>Descripción</label>
+            <span class="nota-campo">Opcional. Máximo 500 caracteres.</span>
+            <textarea name="act_descripcion[]" rows="3" maxlength="500"
+                      placeholder="Describa brevemente la actividad..."></textarea>
+            <span class="mensaje-error" aria-live="polite"></span>
+          </article>
+
+          <article class="grupo-campo">
+            <label class="obligatorio">Fotos o Videos</label>
+            <span class="nota-campo">Al menos un archivo. Formatos: jpg, png, gif, bmp, webp, mp4, avi, mov, mkv, webm.</span>
+            <input type="file" name="" multiple accept="image/*,video/*"
+                   class="input-fotos">
+            <span class="mensaje-error" aria-live="polite"></span>
+          </article>
+        </article>
+      </template>
+
+      <section class="grupo-botones">
+        <button type="submit" class="boton boton-primario">Registrar</button>
+        <button type="reset" class="boton boton-secundario"
+                onclick="resetearFormularioCompleto()">Limpiar Formulario</button>
+      </section>
+
+    </form>
+  </section>
+
+{% endblock %}
+
+{% block extra_scripts %}
+  <script>
+    // Datos iniciales que necesita el JS de cliente
+    window.DATOS_INICIALES = {
+      regionSeleccionada: "{{ datos.region_id or region_id_sel or '' }}",
+      comunaSeleccionada: "{{ datos.comuna_id or '' }}",
+      tieneActividadesPrevias: {{ 'true' if actividades_previas and actividades_previas|length > 0 else 'false' }}
+    };
+  </script>
+  <script src="{{ url_for('static', filename='js/validaciones.js') }}"></script>
+  <script src="{{ url_for('static', filename='js/registro.js') }}"></script>
+{% endblock %}

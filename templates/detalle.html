@@ -1,0 +1,146 @@
+{% extends "base.html" %}
+{% block titulo %}Detalle de {{ miembro.nombre }} — Sistema DCC{% endblock %}
+
+{% block contenido %}
+
+  <p>
+    <a href="{{ url_for('listado') }}">« Volver al listado</a>
+  </p>
+
+  <h2>{{ miembro.nombre }}</h2>
+
+  <section class="tarjeta">
+    <h3>Datos del Miembro</h3>
+    <dl class="lista-datos">
+      <dt>Correo electrónico</dt>
+      <dd>{{ miembro.email }}</dd>
+
+      <dt>Teléfono</dt>
+      <dd>{{ miembro.telefono }}</dd>
+
+      <dt>Comuna</dt>
+      <dd>{{ miembro.comuna.nombre if miembro.comuna else '—' }}</dd>
+
+      <dt>Región</dt>
+      <dd>{{ miembro.comuna.region.nombre if miembro.comuna and miembro.comuna.region else '—' }}</dd>
+
+      <dt>Fecha de Registro</dt>
+      <dd>{{ miembro.fecha_registro.strftime('%d-%m-%Y %H:%M:%S') }}</dd>
+    </dl>
+  </section>
+
+  <section>
+    <h3>Actividades ({{ miembro.actividades|length }})</h3>
+
+    {% if miembro.actividades|length == 0 %}
+      <p class="alerta alerta-info">Este miembro no tiene actividades registradas.</p>
+    {% else %}
+      {% for act in miembro.actividades %}
+        <article class="tarjeta tarjeta-detalle-actividad">
+          <header style="display:flex; justify-content:space-between; flex-wrap:wrap; gap:0.5rem;">
+            <h4>{{ act.nombre }}</h4>
+            <span class="etiqueta-tipo etiqueta-tipo-{{ act.tipo|replace('í','i')|replace('ó','o')|replace('é','e') }}">{{ act.tipo|capitalize }}</span>
+          </header>
+
+          <dl class="lista-datos">
+            <dt>Día</dt>
+            <dd>{{ act.dia|capitalize }}</dd>
+
+            <dt>Hora de inicio</dt>
+            <dd>{{ act.hora_inicio }}</dd>
+
+            <dt>Duración</dt>
+            <dd>{{ act.duracion }}</dd>
+
+            {% if act.descripcion %}
+              <dt>Descripción</dt>
+              <dd>{{ act.descripcion }}</dd>
+            {% endif %}
+          </dl>
+
+          {% if act.fotos and act.fotos|length > 0 %}
+            <h5>Fotos y Videos ({{ act.fotos|length }})</h5>
+            <section class="galeria-fotos">
+              {% for foto in act.fotos %}
+                {% set ext = foto.nombre_archivo.rsplit('.', 1)[-1]|lower %}
+                <article class="item-foto">
+                  {% if ext in ['jpg','jpeg','png','gif','bmp','webp'] %}
+                    <a href="{{ url_for('serve_upload', nombre=foto.ruta_archivo) }}" target="_blank">
+                      <img src="{{ url_for('serve_upload', nombre=foto.ruta_archivo) }}"
+                           alt="{{ foto.nombre_archivo }}" loading="lazy">
+                    </a>
+                  {% elif ext in ['mp4','avi','mov','mkv','webm'] %}
+                    <video controls preload="metadata">
+                      <source src="{{ url_for('serve_upload', nombre=foto.ruta_archivo) }}">
+                      Su navegador no soporta video HTML5.
+                    </video>
+                  {% else %}
+                    <a href="{{ url_for('serve_upload', nombre=foto.ruta_archivo) }}">
+                      📎 {{ foto.nombre_archivo }}
+                    </a>
+                  {% endif %}
+                  <span class="nombre-foto">{{ foto.nombre_archivo }}</span>
+                </article>
+              {% endfor %}
+            </section>
+          {% endif %}
+
+          <!-- ===== SECCIÓN DE COMENTARIOS (Tarea 3) ===== -->
+          <!-- Cada actividad tiene su propio bloque de comentarios -->
+          <section class="seccion-comentarios" id="comentarios-act-{{ act.id }}">
+            <h5>Comentarios</h5>
+
+            <!-- Listado de comentarios: se carga via fetch al cargar la página -->
+            <div class="listado-comentarios" id="listado-comentarios-{{ act.id }}">
+              <p class="nota-campo">Cargando comentarios...</p>
+            </div>
+
+            <!-- Formulario para agregar un nuevo comentario -->
+            <article class="tarjeta formulario-comentario" style="margin-top:0.75rem;">
+              <h6 style="margin-bottom:0.75rem; color:var(--color-primario);">Agregar comentario</h6>
+
+              <!-- Nombre del comentarista: obligatorio, 3-80 caracteres -->
+              <article class="grupo-campo">
+                <label for="nombre-comentario-{{ act.id }}" class="obligatorio">Nombre</label>
+                <input type="text"
+                       id="nombre-comentario-{{ act.id }}"
+                       class="input-nombre-comentario"
+                       maxlength="80"
+                       placeholder="Su nombre (mín. 3, máx. 80 caracteres)">
+                <span class="mensaje-error" aria-live="polite"></span>
+              </article>
+
+              <!-- Texto del comentario: obligatorio, mínimo 5 caracteres -->
+              <article class="grupo-campo">
+                <label for="texto-comentario-{{ act.id }}" class="obligatorio">Comentario</label>
+                <textarea id="texto-comentario-{{ act.id }}"
+                          class="input-texto-comentario"
+                          rows="4" cols="50"
+                          placeholder="Escriba su comentario (mín. 5 caracteres, máx. 300)..."
+                          maxlength="300"></textarea>
+                <span class="mensaje-error" aria-live="polite"></span>
+              </article>
+
+              <!-- El botón llama a la función JS con el id de actividad -->
+              <button type="button"
+                      class="boton boton-primario"
+                      onclick="agregarComentario({{ act.id }})">
+                Agregar comentario
+              </button>
+
+              <!-- Mensajes de resultado (éxito o error general) -->
+              <p class="mensaje-resultado-comentario" aria-live="polite" style="margin-top:0.5rem;"></p>
+            </article>
+          </section>
+          <!-- FIN sección comentarios -->
+
+        </article>
+      {% endfor %}
+    {% endif %}
+  </section>
+
+{% endblock %}
+
+{% block extra_scripts %}
+  <script src="{{ url_for('static', filename='js/comentarios.js') }}"></script>
+{% endblock %}

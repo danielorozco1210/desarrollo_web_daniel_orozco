@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+{% block titulo %}Indicadores — Sistema DCC{% endblock %}
+
+{% block contenido %}
+
+  <h2>Indicadores y Métricas</h2>
+
+  <!-- ===== GRÁFICO 1: Líneas - Miembros registrados por día ===== -->
+  <section class="tarjeta">
+    <h3>Miembros Registrados por Día</h3>
+    <p class="nota-campo">Cantidad de miembros que se registraron en cada día del historial.</p>
+    <!-- El canvas es donde Chart.js dibuja el gráfico -->
+    <canvas id="grafico-lineas" height="100"></canvas>
+  </section>
+
+  <!-- ===== GRÁFICO 2: Torta - Actividades por tipo ===== -->
+  <section class="tarjeta">
+    <h3>Actividades por Tipo</h3>
+    <p class="nota-campo">Distribución del total de actividades extraprogramáticas según tipo.</p>
+    <canvas id="grafico-torta" height="100"></canvas>
+  </section>
+
+  <!-- ===== GRÁFICO 3: Barras - Actividades por comuna ===== -->
+  <section class="tarjeta">
+    <h3>Actividades por Comuna</h3>
+    <p class="nota-campo">Total de actividades registradas según la comuna de cada miembro.</p>
+    <canvas id="grafico-barras" height="100"></canvas>
+  </section>
+
+  <!-- Enlace de vuelta a la portada (requerido por el enunciado) -->
+  <p style="margin-top:1rem;">
+    <a href="{{ url_for('index') }}">« Volver a la portada</a>
+  </p>
+
+{% endblock %}
+
+{% block extra_scripts %}
+  <!-- Chart.js desde CDN (librería de gráficos) -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+  <script src="{{ url_for('static', filename='js/indicadores.js') }}"></script>
+{% endblock %}

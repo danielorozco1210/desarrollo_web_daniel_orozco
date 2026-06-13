@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{% block titulo %}Sistema de Gestión de Actividades — DCC{% endblock %}</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+  {% block extra_head %}{% endblock %}
+</head>
+<body>
+
+  <header class="encabezado-sitio">
+    <h1>Sistema de Gestión de Actividades</h1>
+    <span class="subtitulo">Departamento de Ciencias de la Computación — Universidad de Chile</span>
+  </header>
+
+  <nav class="nav-principal" aria-label="Navegación principal">
+    <ul>
+      <li><a href="{{ url_for('index') }}" {% if activo == 'index' %}class="activo"{% endif %}>Inicio</a></li>
+      <li><a href="{{ url_for('registro') }}" {% if activo == 'registro' %}class="activo"{% endif %}>Registrar Miembro y Actividades</a></li>
+      <li><a href="{{ url_for('listado') }}" {% if activo == 'listado' %}class="activo"{% endif %}>Listado de Miembros</a></li>
+      <li><a href="{{ url_for('indicadores') }}" {% if activo == 'indicadores' %}class="activo"{% endif %}>Indicadores</a></li>
+    </ul>
+  </nav>
+
+  <main class="contenido-principal">
+
+    {% with mensajes = get_flashed_messages(with_categories=true) %}
+      {% if mensajes %}
+        {% for categoria, mensaje in mensajes %}
+          <p class="alerta alerta-{{ categoria }}" role="alert">{{ mensaje }}</p>
+        {% endfor %}
+      {% endif %}
+    {% endwith %}
+
+    {% block contenido %}{% endblock %}
+  </main>
+
+  <footer class="pie-pagina">
+    <p>CC5002 — Desarrollo de Aplicaciones Web &bull; DCC, Universidad de Chile &bull; 2026</p>
+  </footer>
+
+  {% block extra_scripts %}{% endblock %}
+</body>
+</html>

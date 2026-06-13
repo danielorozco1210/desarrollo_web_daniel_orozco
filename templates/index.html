@@ -1,0 +1,75 @@
+{% extends "base.html" %}
+{% block titulo %}Inicio — Sistema de Actividades DCC{% endblock %}
+
+{% block contenido %}
+
+  <section>
+    <h2>Bienvenido/a al Sistema de Gestión de Actividades</h2>
+    <p>
+      Este sistema permite al Área de Calidad de Vida del DCC conocer las actividades
+      que realizan los y las integrantes de la comunidad universitaria fuera de sus
+      obligaciones académicas y laborales, tales como actividades artísticas, deportivas,
+      tecnológicas, sociales y recreativas.
+    </p>
+  </section>
+
+  <section class="tarjetas-inicio" aria-label="Accesos principales">
+
+    <a href="{{ url_for('registro') }}" class="tarjeta-enlace">
+      <span class="icono" aria-hidden="true">📋</span>
+      <h3>Registrar Miembro y Actividades</h3>
+      <p>Agregar un nuevo miembro junto con sus actividades extracurriculares.</p>
+    </a>
+
+    <a href="{{ url_for('listado') }}" class="tarjeta-enlace">
+      <span class="icono" aria-hidden="true">👥</span>
+      <h3>Listado de Miembros</h3>
+      <p>Consultar los miembros registrados en el sistema, con paginación.</p>
+    </a>
+
+    <a href="{{ url_for('indicadores') }}" class="tarjeta-enlace">
+      <span class="icono" aria-hidden="true">📊</span>
+      <h3>Indicadores y Métricas</h3>
+      <p>Visualizar gráficos y estadísticas sobre miembros y actividades.</p>
+    </a>
+
+  </section>
+
+  <section class="tarjeta">
+    <h3>Últimos 5 Miembros Agregados</h3>
+
+    {% if ultimos and ultimos|length > 0 %}
+      <table>
+        <caption style="display: none;">Últimos miembros registrados</caption>
+        <thead>
+          <tr>
+            <th>Nombre</th>
+            <th>Correo</th>
+            <th>Teléfono</th>
+            <th>Comuna</th>
+            <th>Fecha de Registro</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for m in ultimos %}
+            <tr class="fila-clickable"
+                onclick="window.location='{{ url_for('miembro_detalle', miembro_id=m.id) }}'">
+              <td>{{ m.nombre }}</td>
+              <td>{{ m.email }}</td>
+              <td>{{ m.telefono }}</td>
+              <td>{{ m.comuna.nombre if m.comuna else '—' }}</td>
+              <td>{{ m.fecha_registro.strftime('%d-%m-%Y %H:%M') }}</td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+      <p style="margin-top: 0.75rem; font-size: 0.85rem; color: #7f8c8d;">
+        Haga clic sobre una fila para ver el detalle del miembro.
+      </p>
+    {% else %}
+      <p>Aún no hay miembros registrados en el sistema.
+        <a href="{{ url_for('registro') }}">Registrar el primero</a>.</p>
+    {% endif %}
+  </section>
+
+{% endblock %}
